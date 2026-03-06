@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prominence Bank - Multi Step Form</title>
+
+<style>
+
+:root{
+--primary:#005a8b;
+--light:#fff;
+--gray:#f4f4f4;
+--border:#ddd;
+--success:#5cb85c;
+--danger:#d9534f;
+}
+
+body{
+font-family:Arial;
+background:#eef2f5;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:white;
+padding:40px;
+border-radius:8px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+
+h1{text-align:center;color:var(--primary)}
+
+.step-indicator{
+display:flex;
+justify-content:space-between;
+margin-bottom:30px;
+}
+
+.step{
+flex:1;
+text-align:center;
+padding:10px;
+border-bottom:3px solid #ccc;
+font-weight:600;
+}
+
+.step.active{
+border-color:var(--primary);
+color:var(--primary);
+}
+
+.progress{
+height:8px;
+background:#eee;
+margin-bottom:30px;
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:var(--primary);
+transition:.4s;
+}
+
+.form-step{display:none}
+.form-step.active{display:block}
+
+.form-group{margin-bottom:20px}
+
+label{display:block;margin-bottom:5px;font-weight:600}
+
+input,select{
+width:100%;
+padding:10px;
+border:1px solid var(--border);
+border-radius:4px;
+}
+
+.error{
+color:var(--danger);
+font-size:13px;
+display:none;
+}
+
+.buttons{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+font-weight:600;
+}
+
+.next{background:var(--primary);color:white}
+.prev{background:#777;color:white}
+.submit{background:var(--success);color:white}
+
+.save{
+text-align:center;
+margin-top:20px;
+}
+
+.summary{
+background:#f9f9f9;
+padding:15px;
+border-radius:6px;
+}
+
+@media(max-width:600px){
+.buttons{flex-direction:column}
+button{margin-bottom:10px;width:100%}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Account Application</h1>
+
+<div class="step-indicator">
+<div class="step active">1 Personal Info</div>
+<div class="step">2 Account</div>
+<div class="step">3 Review</div>
+</div>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<form id="form">
+
+<!-- STEP 1 -->
+
+<div class="form-step active">
+
+<div class="form-group">
+<label>Full Name *</label>
+<input type="text" name="fullName" required>
+<span class="error">Required</span>
+</div>
+
+<div class="form-group">
+<label>Email *</label>
+<input type="email" name="email" required>
+<span class="error">Required</span>
+</div>
+
+<div class="form-group">
+<label>Phone *</label>
+<input type="tel" name="phone" required>
+<span class="error">Required</span>
+</div>
+
+</div>
+
+<!-- STEP 2 -->
+
+<div class="form-step">
+
+<div class="form-group">
+<label>Account Type *</label>
+
+<select name="accountType" required>
+<option value="">Choose</option>
+<option>Checking</option>
+<option>Savings</option>
+<option>Business</option>
+</select>
+
+<span class="error">Required</span>
+
+</div>
+
+<div class="form-group">
+<label>Initial Deposit</label>
+<input type="number" name="deposit">
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+
+<div class="form-step">
+
+<h3>Review Information</h3>
+
+<div class="summary" id="review"></div>
+
+<div class="form-group">
+
+<label>
+<input type="checkbox" name="agree" required>
+I agree to terms
+</label>
+
+<span class="error">Required</span>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button type="button" class="prev" onclick="step(-1)">Back</button>
+
+<button type="button" class="next" onclick="step(1)">Next</button>
+
+<button type="submit" class="submit" style="display:none">Submit</button>
+
+</div>
+
+<div class="save">
+<a href="#" onclick="saveData()">Save & Continue Later</a>
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+let current=0
+const steps=document.querySelectorAll(".form-step")
+const indicators=document.querySelectorAll(".step")
+const progress=document.getElementById("progressBar")
+
+function showStep(){
+
+steps.forEach(s=>s.classList.remove("active"))
+steps[current].classList.add("active")
+
+indicators.forEach(s=>s.classList.remove("active"))
+indicators[current].classList.add("active")
+
+progress.style.width=((current+1)/steps.length)*100+"%"
+
+document.querySelector(".prev").style.display=current==0?"none":"block"
+
+document.querySelector(".next").style.display=current==steps.length-1?"none":"block"
+
+document.querySelector(".submit").style.display=current==steps.length-1?"block":"none"
+
+if(current==2)review()
+
+}
+
+function validate(){
+
+let valid=true
+
+steps[current].querySelectorAll("input,select").forEach(el=>{
+
+if(el.hasAttribute("required") && !el.value && el.type!="checkbox"){
+
+el.nextElementSibling.style.display="block"
+valid=false
+
+}
+
+else if(el.type=="checkbox" && !el.checked){
+
+el.parentElement.nextElementSibling.style.display="block"
+valid=false
+
+}
+
+else{
+
+if(el.nextElementSibling)el.nextElementSibling.style.display="none"
+
+}
+
+})
+
+return valid
+
+}
+
+function step(n){
+
+if(n==1 && !validate())return
+
+current+=n
+
+showStep()
+
+}
+
+function review(){
+
+const data=new FormData(document.getElementById("form"))
+
+let html=""
+
+data.forEach((v,k)=>{
+
+if(k!="agree")html+=`<p><b>${k}</b>: ${v}</p>`
+
+})
+
+document.getElementById("review").innerHTML=html
+
+}
+
+function saveData(){
+
+const data=new FormData(document.getElementById("form"))
+
+let obj={}
+
+data.forEach((v,k)=>obj[k]=v)
+
+localStorage.setItem("bankForm",JSON.stringify(obj))
+
+alert("Saved successfully!")
+
+}
+
+function loadData(){
+
+const saved=localStorage.getItem("bankForm")
+
+if(!saved)return
+
+const data=JSON.parse(saved)
+
+Object.keys(data).forEach(k=>{
+
+const el=document.querySelector(`[name=${k}]`)
+
+if(el)el.value=data[k]
+
+})
+
+}
+
+document.getElementById("form").addEventListener("submit",e=>{
+
+e.preventDefault()
+
+alert("Application Submitted!")
+
+localStorage.removeItem("bankForm")
+
+})
+
+loadData()
+showStep()
+
+</script>
+
+</body>
+</html>

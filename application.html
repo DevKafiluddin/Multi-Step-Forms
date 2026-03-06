@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bank Account Application</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#eef2f5;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:40px;
+border-radius:8px;
+box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+
+h1{text-align:center;color:#005a8b}
+
+.progress{
+height:10px;
+background:#eee;
+border-radius:20px;
+overflow:hidden;
+margin-bottom:30px;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#005a8b;
+transition:.4s;
+}
+
+.step{display:none}
+.step.active{display:block}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.grid-1{
+display:grid;
+grid-template-columns:1fr;
+gap:15px;
+}
+
+input,select,textarea{
+padding:10px;
+width:100%;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+.buttons{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.next{background:#005a8b;color:white}
+.prev{background:#777;color:white}
+.submit{background:#28a745;color:white}
+
+.review{
+background:#f9f9f9;
+padding:20px;
+border-radius:6px;
+}
+
+@media(max-width:700px){
+.grid{grid-template-columns:1fr}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Bank Account Application</h1>
+
+<div class="progress">
+<div class="progress-bar" id="progress"></div>
+</div>
+
+<form id="form">
+
+<!-- STEP 1 -->
+<div class="step active">
+
+<h3>Account Type</h3>
+
+<div class="grid-1">
+
+<select name="accountType" required>
+<option value="">Select Account Type</option>
+<option>Personal Account</option>
+<option>Joint Account</option>
+<option>Corporate Account</option>
+</select>
+
+</div>
+
+</div>
+
+<!-- STEP 2 -->
+
+<div class="step">
+
+<h3>Personal Details</h3>
+
+<div class="grid">
+
+<select name="title">
+<option>Mr</option>
+<option>Mrs</option>
+<option>Ms</option>
+</select>
+
+<input name="firstName" placeholder="First Name">
+
+<input name="lastName" placeholder="Last Name">
+
+<input name="middleName" placeholder="Middle Name">
+
+<input type="date" name="dob">
+
+<input name="nationality" placeholder="Nationality">
+
+<input name="passport" placeholder="Passport Number">
+
+<input type="date" name="passportExpiry">
+
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+
+<div class="step">
+
+<h3>Contact Details</h3>
+
+<div class="grid">
+
+<input name="phone" placeholder="Telephone">
+
+<input name="fax" placeholder="Fax">
+
+<input name="email" placeholder="Email">
+
+<input name="mobile" placeholder="Mobile">
+
+<textarea name="address" placeholder="Address"></textarea>
+
+<input name="city" placeholder="City">
+
+<input name="state" placeholder="State">
+
+<input name="zip" placeholder="Zip Code">
+
+<input name="country" placeholder="Country">
+
+</div>
+
+</div>
+
+<!-- STEP 4 -->
+
+<div class="step">
+
+<h3>Expected Transfer Activity</h3>
+
+<div class="grid">
+
+<input name="monthlyCredit" placeholder="Monthly credit activity">
+
+<input name="maxTransfer" placeholder="Max single transfer">
+
+<input name="internationalTransfer" placeholder="International transfers">
+
+<input name="domesticTransfer" placeholder="Domestic transfers">
+
+<input name="avgTransaction" placeholder="Average transaction value">
+
+<input name="monthlyTransactions" placeholder="Monthly transactions">
+
+<input name="yearlyActivity" placeholder="Yearly activity">
+
+</div>
+
+</div>
+
+<!-- STEP 5 -->
+
+<div class="step">
+
+<h3>Source of Initial Funding</h3>
+
+<div class="grid">
+
+<select name="fundSource">
+<option>Salary</option>
+<option>Business Income</option>
+<option>Investment</option>
+<option>Savings</option>
+</select>
+
+<input name="originBank" placeholder="Originating Bank Name">
+
+<input name="bankAddress" placeholder="Bank Address">
+
+<input name="accountName" placeholder="Account Name">
+
+<input name="accountNumber" placeholder="Account Number">
+
+</div>
+
+</div>
+
+<!-- STEP 6 -->
+
+<div class="step">
+
+<h3>Bank Account</h3>
+
+<div class="grid">
+
+<select name="currency">
+<option>USD</option>
+<option>EUR</option>
+<option>GBP</option>
+</select>
+
+<select name="accountCategory">
+<option>Savings</option>
+<option>Checking</option>
+</select>
+
+<input name="initialDeposit" placeholder="Initial Deposit">
+
+</div>
+
+</div>
+
+<!-- STEP 7 -->
+
+<div class="step">
+
+<h3>Referral</h3>
+
+<div class="grid">
+
+<input name="referralName" placeholder="Referred By">
+
+<input name="referralCode" placeholder="Referral Code">
+
+</div>
+
+</div>
+
+<!-- STEP 8 -->
+
+<div class="step">
+
+<h3>KYC / AML Documents</h3>
+
+<div class="grid">
+
+<input type="file" name="passportFile">
+
+<input type="file" name="utilityBill">
+
+<input type="file" name="bankStatement">
+
+<input type="file" name="extraDoc">
+
+</div>
+
+</div>
+
+<!-- STEP 9 -->
+
+<div class="step">
+
+<h3>Review</h3>
+
+<div id="review" class="review"></div>
+
+<label>
+<input type="checkbox" required>
+I confirm the information is correct
+</label>
+
+</div>
+
+<div class="buttons">
+
+<button type="button" class="prev" onclick="move(-1)">Back</button>
+
+<button type="button" class="next" onclick="move(1)">Next</button>
+
+<button type="submit" class="submit" style="display:none">Submit</button>
+
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+let step=0
+
+const steps=document.querySelectorAll(".step")
+const progress=document.getElementById("progress")
+
+function show(){
+
+steps.forEach(s=>s.classList.remove("active"))
+steps[step].classList.add("active")
+
+progress.style.width=((step+1)/steps.length)*100+"%"
+
+document.querySelector(".prev").style.display=step==0?"none":"block"
+
+document.querySelector(".next").style.display=step==steps.length-1?"none":"block"
+
+document.querySelector(".submit").style.display=step==steps.length-1?"block":"none"
+
+if(step==steps.length-1)generateReview()
+
+}
+
+function move(n){
+
+step+=n
+
+if(step<0)step=0
+if(step>=steps.length)step=steps.length-1
+
+show()
+
+}
+
+function generateReview(){
+
+const data=new FormData(document.getElementById("form"))
+
+let html=""
+
+data.forEach((v,k)=>{
+
+if(v && k!="passportFile" && k!="utilityBill" && k!="bankStatement" && k!="extraDoc"){
+
+html+=`<p><b>${k}</b>: ${v}</p>`
+
+}
+
+})
+
+document.getElementById("review").innerHTML=html
+
+}
+
+document.getElementById("form").addEventListener("submit",e=>{
+
+e.preventDefault()
+
+alert("Application Submitted!")
+
+})
+
+show()
+
+</script>
+
+</body>
+</html>
