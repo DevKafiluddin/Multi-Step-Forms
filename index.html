@@ -6,7 +6,6 @@
 <title>Prominence Bank - Multi Step Form</title>
 
 <style>
-
 :root{
 --primary:#005a8b;
 --light:#fff;
@@ -37,7 +36,8 @@ h1{text-align:center;color:var(--primary)}
 .step-indicator{
 display:flex;
 justify-content:space-between;
-margin-bottom:30px;
+margin-bottom:20px;
+flex-wrap:wrap;
 }
 
 .step{
@@ -46,6 +46,7 @@ text-align:center;
 padding:10px;
 border-bottom:3px solid #ccc;
 font-weight:600;
+font-size:14px;
 }
 
 .step.active{
@@ -56,7 +57,7 @@ color:var(--primary);
 .progress{
 height:8px;
 background:#eee;
-margin-bottom:30px;
+margin-bottom:20px;
 border-radius:10px;
 overflow:hidden;
 }
@@ -73,13 +74,14 @@ transition:.4s;
 
 .form-group{margin-bottom:20px}
 
-label{display:block;margin-bottom:5px;font-weight:600}
+label{display:block;margin-bottom:5px;font-weight:600;font-size:14px}
 
 input,select{
 width:100%;
 padding:10px;
 border:1px solid var(--border);
 border-radius:4px;
+box-sizing:border-box;
 }
 
 .error{
@@ -92,6 +94,7 @@ display:none;
 display:flex;
 justify-content:space-between;
 margin-top:30px;
+flex-wrap:wrap;
 }
 
 button{
@@ -100,6 +103,7 @@ border:none;
 border-radius:4px;
 cursor:pointer;
 font-weight:600;
+margin-top:5px;
 }
 
 .next{background:var(--primary);color:white}
@@ -115,13 +119,27 @@ margin-top:20px;
 background:#f9f9f9;
 padding:15px;
 border-radius:6px;
+font-size:14px;
 }
 
+/* --- Mobile Responsive --- */
 @media(max-width:600px){
-.buttons{flex-direction:column}
-button{margin-bottom:10px;width:100%}
+.buttons{
+    flex-direction:column;
 }
-
+button{
+    width:100%;
+    margin-bottom:10px;
+}
+.step-indicator{
+    flex-direction:column;
+    gap:5px;
+}
+h1{font-size:20px;}
+label{font-size:13px;}
+input, select{font-size:14px;padding:8px;}
+.summary{font-size:13px;}
+}
 </style>
 </head>
 
@@ -133,7 +151,6 @@ button{margin-bottom:10px;width:100%}
   <li><a href="application.html">Bank Account Application</a></li>
   <li><a href="multistepform.html">Multi-Step Bank Form</a></li>
 </ul>
-
 <h1>Account Application</h1>
 
 <div class="step-indicator">
@@ -149,83 +166,59 @@ button{margin-bottom:10px;width:100%}
 <form id="form">
 
 <!-- STEP 1 -->
-
 <div class="form-step active">
-
 <div class="form-group">
 <label>Full Name *</label>
 <input type="text" name="fullName" required>
 <span class="error">Required</span>
 </div>
-
 <div class="form-group">
 <label>Email *</label>
 <input type="email" name="email" required>
 <span class="error">Required</span>
 </div>
-
 <div class="form-group">
 <label>Phone *</label>
 <input type="tel" name="phone" required>
 <span class="error">Required</span>
 </div>
-
 </div>
 
 <!-- STEP 2 -->
-
 <div class="form-step">
-
 <div class="form-group">
 <label>Account Type *</label>
-
 <select name="accountType" required>
 <option value="">Choose</option>
 <option>Checking</option>
 <option>Savings</option>
 <option>Business</option>
 </select>
-
 <span class="error">Required</span>
-
 </div>
-
 <div class="form-group">
 <label>Initial Deposit</label>
 <input type="number" name="deposit">
 </div>
-
 </div>
 
 <!-- STEP 3 -->
-
 <div class="form-step">
-
 <h3>Review Information</h3>
-
 <div class="summary" id="review"></div>
-
 <div class="form-group">
-
 <label>
 <input type="checkbox" name="agree" required>
 I agree to terms
 </label>
-
 <span class="error">Required</span>
-
 </div>
-
 </div>
 
 <div class="buttons">
-
 <button type="button" class="prev" onclick="step(-1)">Back</button>
-
 <button type="button" class="next" onclick="step(1)">Next</button>
-
 <button type="submit" class="submit" style="display:none">Submit</button>
-
 </div>
 
 <div class="save">
@@ -233,18 +226,15 @@ I agree to terms
 </div>
 
 </form>
-
 </div>
 
 <script>
-
 let current=0
 const steps=document.querySelectorAll(".form-step")
 const indicators=document.querySelectorAll(".step")
 const progress=document.getElementById("progressBar")
 
 function showStep(){
-
 steps.forEach(s=>s.classList.remove("active"))
 steps[current].classList.add("active")
 
@@ -254,118 +244,73 @@ indicators[current].classList.add("active")
 progress.style.width=((current+1)/steps.length)*100+"%"
 
 document.querySelector(".prev").style.display=current==0?"none":"block"
-
 document.querySelector(".next").style.display=current==steps.length-1?"none":"block"
-
 document.querySelector(".submit").style.display=current==steps.length-1?"block":"none"
 
 if(current==2)review()
-
 }
 
 function validate(){
-
 let valid=true
-
 steps[current].querySelectorAll("input,select").forEach(el=>{
-
 if(el.hasAttribute("required") && !el.value && el.type!="checkbox"){
-
 el.nextElementSibling.style.display="block"
 valid=false
-
 }
-
 else if(el.type=="checkbox" && !el.checked){
-
 el.parentElement.nextElementSibling.style.display="block"
 valid=false
-
 }
-
 else{
-
 if(el.nextElementSibling)el.nextElementSibling.style.display="none"
-
 }
-
 })
-
 return valid
-
 }
 
 function step(n){
-
 if(n==1 && !validate())return
-
 current+=n
-
+if(current<0)current=0
+if(current>=steps.length)current=steps.length-1
 showStep()
-
 }
 
 function review(){
-
 const data=new FormData(document.getElementById("form"))
-
 let html=""
-
 data.forEach((v,k)=>{
-
-if(k!="agree")html+=`<p><b>${k}</b>: ${v}</p>`
-
+if(k!="agree") html+=`<p><b>${k}</b>: ${v}</p>`
 })
-
 document.getElementById("review").innerHTML=html
-
 }
 
 function saveData(){
-
 const data=new FormData(document.getElementById("form"))
-
 let obj={}
-
 data.forEach((v,k)=>obj[k]=v)
-
 localStorage.setItem("bankForm",JSON.stringify(obj))
-
 alert("Saved successfully!")
-
 }
 
 function loadData(){
-
 const saved=localStorage.getItem("bankForm")
-
-if(!saved)return
-
+if(!saved) return
 const data=JSON.parse(saved)
-
 Object.keys(data).forEach(k=>{
-
 const el=document.querySelector(`[name=${k}]`)
-
-if(el)el.value=data[k]
-
+if(el) el.value=data[k]
 })
-
 }
 
 document.getElementById("form").addEventListener("submit",e=>{
-
 e.preventDefault()
-
 alert("Application Submitted!")
-
 localStorage.removeItem("bankForm")
-
 })
 
 loadData()
 showStep()
-
 </script>
 
 </body>
