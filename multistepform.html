@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Bank Account Application</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#eef2f5;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+h1{
+text-align:center;
+color:#004d80;
+margin-bottom:30px;
+}
+
+.steps{
+display:flex;
+justify-content:space-between;
+margin-bottom:25px;
+}
+
+.step-circle{
+width:30px;
+height:30px;
+border-radius:50%;
+background:#ddd;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:13px;
+}
+
+.step-circle.active{
+background:#004d80;
+color:white;
+}
+
+.progress{
+height:8px;
+background:#eee;
+border-radius:20px;
+overflow:hidden;
+margin-bottom:30px;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#004d80;
+transition:.4s;
+}
+
+.step{
+display:none;
+animation:fade .4s;
+}
+
+.step.active{display:block}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(5px)}
+to{opacity:1}
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.grid1{
+display:grid;
+grid-template-columns:1fr;
+gap:15px;
+}
+
+input,select,textarea{
+padding:11px;
+border:1px solid #ccc;
+border-radius:4px;
+width:100%;
+}
+
+.buttons{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+button{
+padding:12px 24px;
+border:none;
+border-radius:5px;
+font-weight:600;
+cursor:pointer;
+}
+
+.next{background:#004d80;color:white}
+.prev{background:#888;color:white}
+.submit{background:#28a745;color:white}
+
+.review{
+background:#fafafa;
+padding:20px;
+border-radius:6px;
+}
+
+@media(max-width:700px){
+.grid{grid-template-columns:1fr}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<ul>
+  <li><a href="index.html">Account Application</a></li>
+  <li><a href="application.html">Bank Account Application</a></li>
+  <li><a href="multistepform.html">Multi-Step Bank Form</a></li>
+</ul>
+
+<h1>Multi-Step Bank Form</h1>
+
+<div class="steps" id="steps"></div>
+
+<div class="progress">
+<div class="progress-bar" id="progress"></div>
+</div>
+
+<form id="form">
+
+<div class="step active">
+<h3>Account Type</h3>
+<div class="grid1">
+<select name="accountType">
+<option value="">Select account type</option>
+<option>Personal</option>
+<option>Joint</option>
+<option>Corporate</option>
+</select>
+</div>
+</div>
+
+<div class="step">
+<h3>Personal Details</h3>
+<div class="grid">
+<input name="firstName" placeholder="First Name">
+<input name="lastName" placeholder="Last Name">
+<input type="date" name="dob">
+<input name="nationality" placeholder="Nationality">
+<input name="passport" placeholder="Passport Number">
+<input type="date" name="passportExpiry">
+</div>
+</div>
+
+<div class="step">
+<h3>Contact</h3>
+<div class="grid">
+<input name="email" placeholder="Email">
+<input name="phone" placeholder="Phone">
+<textarea name="address" placeholder="Address"></textarea>
+<input name="city" placeholder="City">
+<input name="country" placeholder="Country">
+</div>
+</div>
+
+<div class="step">
+<h3>Expected Transfer Activity</h3>
+<div class="grid">
+<input name="monthlyCredit" placeholder="Monthly credit">
+<input name="maxTransfer" placeholder="Max transfer">
+<input name="avgTransaction" placeholder="Average transaction">
+<input name="transactions" placeholder="Monthly transactions">
+</div>
+</div>
+
+<div class="step">
+<h3>Source of Funding</h3>
+<div class="grid">
+<select name="fundSource">
+<option>Salary</option>
+<option>Business</option>
+<option>Investment</option>
+<option>Savings</option>
+</select>
+<input name="originBank" placeholder="Originating Bank">
+<input name="accountNumber" placeholder="Account Number">
+</div>
+</div>
+
+<div class="step">
+<h3>Bank Account</h3>
+<div class="grid">
+<select name="currency">
+<option>USD</option>
+<option>EUR</option>
+<option>GBP</option>
+</select>
+<select name="accountType2">
+<option>Savings</option>
+<option>Checking</option>
+</select>
+<input name="deposit" placeholder="Initial Deposit">
+</div>
+</div>
+
+<div class="step">
+<h3>Referral</h3>
+<div class="grid">
+<input name="referral" placeholder="Referred By">
+<input name="refCode" placeholder="Referral Code">
+</div>
+</div>
+
+<div class="step">
+<h3>KYC Documents</h3>
+<div class="grid">
+<input type="file" name="passportFile">
+<input type="file" name="utility">
+<input type="file" name="statement">
+</div>
+</div>
+
+<div class="step">
+<h3>Review</h3>
+<div id="review" class="review"></div>
+<label><input type="checkbox"> I confirm the information is correct</label>
+</div>
+
+<div class="buttons">
+
+<button type="button" class="prev" onclick="move(-1)">Back</button>
+
+<button type="button" class="next" onclick="move(1)">Next</button>
+
+<button type="submit" class="submit" style="display:none">Submit</button>
+
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+const steps=document.querySelectorAll(".step")
+const progress=document.getElementById("progress")
+const stepContainer=document.getElementById("steps")
+
+let step=0
+
+for(let i=1;i<=steps.length;i++){
+let s=document.createElement("div")
+s.className="step-circle"
+s.innerText=i
+stepContainer.appendChild(s)
+}
+
+const circles=document.querySelectorAll(".step-circle")
+
+function show(){
+
+steps.forEach(e=>e.classList.remove("active"))
+steps[step].classList.add("active")
+
+circles.forEach(c=>c.classList.remove("active"))
+circles[step].classList.add("active")
+
+progress.style.width=((step+1)/steps.length)*100+"%"
+
+document.querySelector(".prev").style.display=step==0?"none":"block"
+
+document.querySelector(".next").style.display=step==steps.length-1?"none":"block"
+
+document.querySelector(".submit").style.display=step==steps.length-1?"block":"none"
+
+localStorage.setItem("bankFormStep",step)
+
+if(step==steps.length-1)review()
+
+}
+
+function move(n){
+step+=n
+if(step<0)step=0
+if(step>steps.length-1)step=steps.length-1
+show()
+}
+
+function review(){
+
+const data=new FormData(document.getElementById("form"))
+
+let html=""
+
+data.forEach((v,k)=>{
+if(v && v.name==undefined){
+html+=`<p><b>${k}</b>: ${v}</p>`
+}
+})
+
+document.getElementById("review").innerHTML=html
+
+}
+
+document.getElementById("form").addEventListener("submit",e=>{
+e.preventDefault()
+alert("Application Submitted Successfully")
+})
+
+show()
+
+</script>
+
+</body>
+</html>
